@@ -1,10 +1,13 @@
 package com.yooda.app;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -23,31 +26,23 @@ public class MainActivity extends AppCompatActivity {
 
     RecyclerView headCategoryRecycler;
     HeadCategoryAdapter headCategoryAdapter;
+    SharedPreferences sharedpreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final Button button = findViewById(R.id.button);
-        button.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                gotoFragment();
-            }
-        });
+        sharedpreferences = getSharedPreferences("App", Context.MODE_PRIVATE);
 
+        Log.d("LOL", sharedpreferences.getAll().toString());
 
         TabLayout tabLayout = findViewById(R.id.header_tab);
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                switch(tab.getPosition()) {
-                    case 0:
-                        gotoFragment1();
-                    case 1:
-                        gotoFragment();
-                }
+                gotoFragment(tab);
             }
 
             @Override
@@ -92,19 +87,34 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void gotoFragment(){
-        CashFragment fragment = new CashFragment();
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container_view, fragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
+    public void gotoFragment(TabLayout.Tab tab) {
+        String fr = "StoreFragment";
+        switch (tab.getPosition()){
+            case 0: fr = "StoreFragment"; break;
+            case 1: fr = "CashFragment"; break;
+            case 2: fr = "ContactFragment"; break;
+            case 3: fr = "ScheduleFragment"; break;
+            case 4: fr = "HistoryFragment"; break;
+            case 5: fr = "StatisticFragment"; break;
+        }
+
+        try{
+            if(fr.equals("StatisticFragment")){
+                SharedPreferences.Editor editor = sharedpreferences.edit();
+                editor.putString("cac", "1");
+                editor.commit();
+            }
+
+            Fragment f = (Fragment)(Class.forName("com.yooda.app.fragment." + fr).newInstance());
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            FragmentTransaction replace = transaction.replace(R.id.fragment_container_view, f);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        } catch(ClassNotFoundException e){
+            Log.e("Loading","Класс не найден",e);
+        } catch (IllegalAccessException | InstantiationException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void gotoFragment1(){
-        StoreFragment fragment = new StoreFragment();
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container_view, fragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
-    }
 }
