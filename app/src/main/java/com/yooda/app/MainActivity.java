@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -35,23 +36,37 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-//        TabLayout headerTabs = findViewById(R.id.header_tab);
-//        tabLayout.addOnTabSelectedListener(new OnTabSelectedListener() {
-//            @Override
-//            public void onTabSelected(Tab tab) {
-//                switch(tab.getPosition()) {
-//                    case 0:
-//                  ....
-//                }
-//            }
+
+        TabLayout tabLayout = findViewById(R.id.header_tab);
+
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                switch(tab.getPosition()) {
+                    case 0:
+                        gotoFragment1();
+                    case 1:
+                        gotoFragment();
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
 
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.fragment_container_view, StoreFragment.class, null)
-                    .commit();
+                .add(R.id.fragment_container_view, StoreFragment.class, null)
+                .commit();
         }
-
 
         List<HeadCategory> list = new ArrayList<>();
         list.add(new HeadCategory(1,"Склад", "storage"));
@@ -78,8 +93,15 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void gotoFragment(){
-
         CashFragment fragment = new CashFragment();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container_view, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
+    public void gotoFragment1(){
+        StoreFragment fragment = new StoreFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container_view, fragment);
         transaction.addToBackStack(null);
