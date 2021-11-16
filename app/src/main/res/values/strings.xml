@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">App</string>
+    <string name="store">Склад</string>
+    <string name="cash">Финансы</string>
+    <string name="contacts">Контакты</string>
+    <string name="schedule">Планировщик</string>
+    <string name="history">История</string>
+    <string name="statistic">Статистика</string>
+</resources>
