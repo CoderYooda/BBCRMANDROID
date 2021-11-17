@@ -1,5 +1,6 @@
 package com.yooda.app;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -46,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
     HeadCategoryAdapter headCategoryAdapter;
     SharedPreferences sharedpreferences;
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,7 +55,9 @@ public class MainActivity extends AppCompatActivity {
         takeAllPermissions();
 
         // Запуск сервиса окна вызова поверх окон
-        startService(new Intent(getApplication(), FloatCallerService.class));
+        if (Settings.canDrawOverlays(this)) {
+            startService(new Intent(getApplication(), FloatCallerService.class));
+        }
         
         // Local Storage
         sharedpreferences = getSharedPreferences("App", Context.MODE_PRIVATE);

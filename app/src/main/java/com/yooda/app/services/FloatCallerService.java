@@ -1,8 +1,10 @@
 package com.yooda.app.services;
 
+import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Intent;
 import android.graphics.PixelFormat;
+import android.os.Build;
 import android.os.IBinder;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -14,13 +16,19 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
+
 import com.yooda.app.R;
 
 public class FloatCallerService extends Service {
+    private static int LAYOUT_FLAG = 0;
+
     public FloatCallerService() {
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onCreate() {
         super.onCreate();
@@ -39,10 +47,16 @@ public class FloatCallerService extends Service {
         //своего размера, что бы можно было перемещать по экрану
         //что бы была прозрачной, и устанавливается ее стартовое полодение
         //на экране при создании
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+            LAYOUT_FLAG = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+        else {
+            LAYOUT_FLAG = WindowManager.LayoutParams.TYPE_PHONE;
+        }
+
         params = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.WRAP_CONTENT,
-                WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
+                LAYOUT_FLAG,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
 

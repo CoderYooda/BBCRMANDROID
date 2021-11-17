@@ -3,6 +3,14 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        Publish {
+            storeFile file('C:\\App\\ИИСКЬ\\BBCRM\\key.jks')
+            storePassword 'sena315405'
+            keyAlias 'BBCRMAPP'
+            keyPassword 'sena315405'
+        }
+    }
     compileSdk 30
 
     defaultConfig {
